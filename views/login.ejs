@@ -29,6 +29,10 @@
           <div id="formFooter">
             <a class="underlineHover" href="/register">Register</a>
           </div>
+
+          <% if (message != '') { %>
+            <h3><%= message %></h3>
+          <% } %>
       
         </div>
       </div>

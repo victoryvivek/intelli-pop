@@ -17,11 +17,11 @@ const connectDatabase = ()=>{
 }
 
 exports.getLogin =(req,res,next)=>{
-    return res.render('login')
+    return res.render('login',{message :''});
 }
 
 exports.getRegister =(req,res,next)=>{
-    return res.render('register')
+    return res.render('register',{message :''});
 }
 
 exports.postRegister = (req,res,next) => {
@@ -36,25 +36,45 @@ exports.postRegister = (req,res,next) => {
     
     db.serialize(()=>{
         console.log('hi inside serilaize');
-            db.each(`SELECT * FROM userdatatable where username='${username}'`,(err,row)=>{
-            console.log('inside');
+        db.run(`INSERT INTO userdatatable (username,password) VALUES ('${username}','${password}')`,err =>{
             if(err){
-                console.log('hi');
-                db.run(`INSERT INTO userdatatable (username,password) VALUES ('${username}','${password}')`);
+                console.log('Username already exists');
+                return res.render('register',{message:'Username already exists'});
+            }else{
                 console.log('User Added');
                 return res.redirect('/dashboard/'+username);
-            }else{
-                console.log('bye');
-                console.log(row);
-                console.log('Username already exists');
-                return res.render('/register');
             }
         });
+
     });
 }
 
 exports.postLogin = (req,res,next) => {
-    
+    const username = req.body.login_username;
+    const password = req.body.login_password;
+
+    const db = new sqlite3.Database(databasePath);
+
+    console.log(db);
+    console.log(username);
+    console.log(password);
+
+    db.serialize(()=>{
+
+        db.all(`SELECT * FROM userdatatable where username='${username}' and password = '${password}'`, [], (err, rows) => {
+            if (err) {
+              console.log('all',err);
+            }
+            if(rows.length==0){
+                console.log('Wrong username or password');
+                return res.render('login',{message:'Wrong username or password'});
+            }else{
+                console.log('Login Success');
+                return res.redirect('/dashboard/'+username);
+            }
+            
+          });
+    });
 }
 
 exports.getDashboard = (req,res,next) => {
