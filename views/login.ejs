@@ -12,16 +12,20 @@
     <div class="wrapper fadeInDown">
         <div id="formContent">
           <!-- Tabs Titles -->
+
+          <% if (messages.error) { %>
+           <%= messages.error %>
+          <% } %>
       
           <!-- Icon -->
           <div class="fadeIn first">
-            <img src="http://danielzawadzki.com/codepen/01/icon.svg" id="icon" alt="User Icon" />
+              <img src="https://img.icons8.com/color/96/000000/admin-settings-male.png">
           </div>
       
           <!-- Login Form -->
           <form method="POST">
             <input type="text" id="login_username" class="fadeIn second" name="login_username" placeholder="username">
-            <input type="text" id="login_password" class="fadeIn third" name="login_password" placeholder="password">
+            <input type="password" id="login_password" class="fadeIn third" name="login_password" placeholder="password">
             <input type="submit" class="fadeIn fourth" value="Log In">
           </form>
       
